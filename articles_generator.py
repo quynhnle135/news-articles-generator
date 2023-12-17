@@ -67,8 +67,22 @@ def get_article_based_on_keyword(keyword: str):
         count += 1
 
 
-# get_article_based_on_keyword(keyword="Elon Musk")
-get_article_based_on_keyword(keyword="Ariana Grande")
+def get_articles_based_on_domain(domain: str):
+    url = f"https://newsapi.org/v2/everything?domains={domain}&sortBy=popularity&language=en"
+    response = requests.request(method="GET", url=url, headers=header).json()
+    print(response)
+    articles = response["articles"][:20]
+    count = 1
+    for item in articles:
+        print(f"{count}. {item['title']}\n"
+              f"Written by: {item['author']}\n"
+              f"Description: {item['description']}\n"
+              f"Read the full article at: {item['url']}\n")
+        count += 1
+
+
+get_articles_based_on_domain(domain="medium.com")
+
 
 
 
