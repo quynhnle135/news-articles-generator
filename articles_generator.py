@@ -1,42 +1,70 @@
 import requests
 from datetime import date, timedelta
-
-API_KEY = "b939e78e924b4e949331cc38cab93a95"
-
-header = {
-    "X-Api-Key": API_KEY
-}
+from api_key import header
 
 
-def get_technology_top_headlines():
-    url = "https://newsapi.org/v2/top-headlines?category=technology&language=en"
-    response = requests.request(method="GET", url=url, headers=header).json()
-    print(response)
-    articles = response["articles"][:20]
-    count = 1
-    for item in articles:
-        print(f"{count}. {item['title']}\n"
-              f"Written by: {item['author']}\n"
-              f"Description: {item['description']}\n"
-              f"Read the full article at: {item['url']}\n")
-        count += 1
-    return response
+def get_publishers(args):
+    base_url = "https://newsapi.org/v2/top-headlines/sources"
+    params = {}
+
+    # Adding provided arguments to the parameters
+    if args.category:
+        params["category"] = args.category.lower()
+    if args.language:
+        params["language"] = args.language.lower()
+    if args.country:
+        params["country"] = args.country.lower()
+
+    # Fetching data from the API
+    try:
+        response = requests.request(method="GET", url=base_url, headers=header, params=params).json()
+        sources = response["sources"][:10]
+
+        # Displaying each source with detail
+        for count, source in enumerate(sources, start=1):
+            print(f"{count}. {source['name']}\n"
+                  f"Description: {source['description']}\n"
+                  f"Check their website: {source['url']}\n")
+        return response
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
 
 
-def get_top_headlines_publishers():
-    url = "https://newsapi.org/v2/top-headlines/sources"
-    response = requests.request(method="GET", url=url, headers=header).json()
-    print(response['sources'][0].keys())
-    publishers = response["sources"][:20]
-    count = 1
-    for p in publishers:
-        print(f"{count}. {p['name']}\n"
-              f"Description: {p['description']}\n"
-              f"Check their website at: {p['url']}\n")
-        count += 1
+def get_latest_articles(args):
+    base_url = "https://newsapi.org/v2/everything"
+    params = {
+        "q": "technology", # Default query
+        "language": "en",  # Default language
+        "sortBy": "popularity"  # Default sorting
+    }
+
+    # Adding provided arguments to the parameters
+    if args.keyword:
+        params["qInTitle"] = args.keyword
+    if args.sortby:
+        params["sortBy"] = args.sortby
+    if args.domain:
+        params["domains"] = args.domain
+    if args.category:
+        params["category"] = args.category
+    if args.language:
+        params["language"] = args.language
+
+    try:
+        response = requests.request(method="GET", url=base_url, headers=header, params=params).json()
+        articles = response["articles"][:10]
+        for count, article in enumerate(articles, start=1):
+            print(f"{count}. {article['title']}\n"
+                  f"Written by: {article['author']}\n"
+                  f"Description: {article['description']}\n"
+                  f"Read the full article at: {article['url']}\n")
+        return response
+    except requests.RequestException as e:
+        print(f"An error occurred: {e}")
 
 
-def get_this_week_openai_articles():
+def get_this_week_articles(args):
+    base_url = f"https://newsapi.org/v2/everything?qInTitle=OpenAI&from={formatted_start_date}&to={formatted_end_date}&sortBy=popularity&language=en"
     today = date.today()
     start_date = today - timedelta(days=today.weekday())
     end_date = start_date + timedelta(days=6)
@@ -53,35 +81,6 @@ def get_this_week_openai_articles():
               f"Read the full article at: {item['url']}\n")
         count += 1
 
-
-def get_article_based_on_keyword(keyword: str):
-    url = f"https://newsapi.org/v2/everything?qInTitle={keyword}&language=en&sortBy=popularity"
-    response = requests.request(method="GET", url=url, headers=header).json()
-    articles = response["articles"][:20]
-    count = 1
-    for item in articles:
-        print(f"{count}. {item['title']}\n"
-              f"Written by: {item['author']}\n"
-              f"Description: {item['description']}\n"
-              f"Read the full article at: {item['url']}\n")
-        count += 1
-
-
-def get_articles_based_on_domain(domain: str):
-    url = f"https://newsapi.org/v2/everything?domains={domain}&sortBy=popularity&language=en"
-    response = requests.request(method="GET", url=url, headers=header).json()
-    print(response)
-    articles = response["articles"][:20]
-    count = 1
-    for item in articles:
-        print(f"{count}. {item['title']}\n"
-              f"Written by: {item['author']}\n"
-              f"Description: {item['description']}\n"
-              f"Read the full article at: {item['url']}\n")
-        count += 1
-
-
-get_articles_based_on_domain(domain="medium.com")
 
 
 

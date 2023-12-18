@@ -1,32 +1,33 @@
 import articles_generator
-from articles_generator import *
 import argparse
 
 
 def main():
     parser = argparse.ArgumentParser(description="Tech News Generator")
-    parser.add_argument("-t", "--topheadlines", nargs="?", help="Get Top Headlines technology news")
-    parser.add_argument("-p", "--publishers", nargs="?",  help="Get Top Publishers")
-    parser.add_argument("-k", "--keyword", type=str, help="Get top news based on given key words")
-    parser.add_argument("-d", "--domain", help="Get top news in the given domain")
+    parser.add_argument("-p", "--publishers", action="store_true",
+                        help="Retrieve a list of top news publishers. Can be filtered by category, country, and language.")
+    parser.add_argument("-a", "--articles", action="store_true",
+                        help="Fetch the latest news articles. Filters like keyword, sortby, domain, category, country, and language can be applied.")
+    parser.add_argument("-ca", "--category", type=str,
+                        help="Filter publishers/articles by a specific news category (e.g., 'business', 'sports'). Applies to both publishers and articles.")
+    parser.add_argument("-co", "--country", type=str,
+                        help="Filter publishers/articles by country using ISO country codes (e.g., 'us' for the United States, 'gb' for Great Britain). Applies to both publishers and articles.")
+    parser.add_argument("-la", "--language", type=str,
+                        help="Filter publishers/articles by language using ISO language codes (e.g., 'en' for English, 'es' for Spanish). Applies to both publishers and articles.")
+    parser.add_argument("-k", "--keyword", type=str, help="Search articles with a specific keyword in the title.")
+    parser.add_argument("-d", "--domain", type=str, help="Search articles in a specific domain.")
+    parser.add_argument("-so", "--sortby", type=str, choices=['publishedAt', 'relevancy', 'popularity'],
+                        help="Sort retrieved articles by 'publishedAt', 'relevancy', or 'popularity'. Applicable only for articles.")
 
     args = parser.parse_args()
 
-    if args.topheadlines:
-        print("---20 Top Headlines in Technology---")
-        articles_generator.get_technology_top_headlines()
-
     if args.publishers:
-        print("---20 Top Publishers---")
-        articles_generator.get_top_headlines_publishers()
+        print("---10  Publishers---")
+        articles_generator.get_publishers(args)
 
-    if args.keyword:
-        print(f"---20 articles based on {args.keyword} keyword---")
-        articles_generator.get_article_based_on_keyword(args.keyword)
-
-    if args.domain:
-        print(f"---20 articles from {args.domain} domain---")
-        articles_generator.get_articles_based_on_domain(args.domain)
+    if args.articles:
+        print("---10 Latest Articles---")
+        articles_generator.get_latest_articles(args)
 
 
 if __name__ == "__main__":
