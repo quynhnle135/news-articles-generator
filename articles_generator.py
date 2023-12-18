@@ -1,6 +1,6 @@
 import requests
 from api_key import header
-from datetime import date, timedelta
+from datetime import date
 
 
 def get_publishers(args):
@@ -127,7 +127,6 @@ def generate_files_with_articles(directory, args):
                 title = article.get("title", "No Title")
                 author = article.get("author", "Unknown Author")
                 published_at = article.get("publishedAt", "N/A")
-                # description = article.get("description", "No Description")
                 url = article.get("url", "No URL")
 
                 file.write(

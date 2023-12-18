@@ -25,7 +25,8 @@ def main():
     parser.add_argument(
         "-g", "--generate",
         action="store_true",
-        help="Generate to-read-list in file"
+        help="Enable this option to generate a 'to-read' list in Markdown format. The list will be created in the "
+             "directory specified by the '--directory' option. Ensure the specified directory exists and is writable."
     )
 
     # Optional arguments
@@ -77,7 +78,8 @@ def main():
     parser.add_argument(
         "-dir", "--directory",
         type=str,
-        help="Provide the directory where the articles will be appended."
+        help="Specify the directory path where the news articles will be saved. Ensure that the directory exists "
+             "and has write permissions."
     )
 
     args = parser.parse_args()
@@ -91,11 +93,11 @@ def main():
         articles_generator.get_latest_articles(args)
 
     if args.append:
-        print("---Appending news to a file---")
+        print("---Appending articles to a file---")
         articles_generator.append_articles_to_file(args.file, args)
 
     if args.generate:
-        print("---Generating articles in a MD file---")
+        print("---Generating articles in Markdown---")
         articles_generator.generate_files_with_articles(args.directory, args)
 
 
