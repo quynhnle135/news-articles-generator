@@ -1,5 +1,6 @@
 import requests
 from api_key import header
+from datetime import date, timedelta
 
 
 def get_publishers(args):
@@ -38,6 +39,8 @@ def get_latest_articles(args):
     }
 
     # Adding provided arguments to the parameters
+    if args.query:
+        params["q"] = args.query
     if args.keyword:
         params["qInTitle"] = args.keyword
     if args.sortby:
@@ -94,6 +97,7 @@ def append_articles_to_file(file_path, args):
                 url = article.get("url", "No URL")
 
                 file.write(
+                      "---\n"
                       f"{count}. {title}\n"
                       f"Written by: {author}\n"
                       f"Published at: {published_at}\n"
@@ -104,4 +108,35 @@ def append_articles_to_file(file_path, args):
         print(f"An error occurred while opening the file: {e}")
 
 
+def generate_files_with_articles(directory, args):
+    today = date.today()
+    file_name = f"{today.strftime('%Y%m%d')}.md"
+    file_path = f"{directory}/{file_name}"
 
+    response = get_latest_articles(args)
+    articles = response["articles"][:20]
+    if not articles:
+        print("No articles to generate.")
+        return
+
+    try:
+        with open(file_path, "a") as file:
+            file.write(f"# To Read List {today.strftime('%Y%m%d')}\n")
+
+            for article in articles:
+                title = article.get("title", "No Title")
+                author = article.get("author", "Unknown Author")
+                published_at = article.get("publishedAt", "N/A")
+                # description = article.get("description", "No Description")
+                url = article.get("url", "No URL")
+
+                file.write(
+                    f"- [ ] <b>{title}</b> </br>"
+                    f"Written by: {author} </br>"
+                    f"Published at: {published_at} </br>"
+                    f"Read the full article at: {url} </br> "
+                    f"</br>"
+                    f"\n\n"
+                )
+    except IOError as e:
+        print(f"An error occurred when opening a file: {e}")

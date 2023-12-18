@@ -1,4 +1,4 @@
-from api_key import header
+from api_key import header, API_KEY
 import requests
 
 
@@ -7,3 +7,8 @@ response = requests.request(method="GET", url=url_one, headers=header).json()
 print(response["articles"][0].keys())
 print(response["articles"][0]["publishedAt"])
 print(type(response["articles"][0]["publishedAt"]))
+
+
+url = f"https://newsapi.org/v2/everything?domains=freecodecamp.org&apiKey={API_KEY}"
+response_django = requests.request(method="GET", url=url, headers=header).json()
+print(response_django)

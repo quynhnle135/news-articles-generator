@@ -22,6 +22,11 @@ def main():
         help="Enable this option to append the latest news articles to a specified file. Requires a valid file path "
              "to be provided with the '--file' option. "
     )
+    parser.add_argument(
+        "-g", "--generate",
+        action="store_true",
+        help="Generate to-read-list in file"
+    )
 
     # Optional arguments
     parser.add_argument(
@@ -42,6 +47,7 @@ def main():
         help="Filter publishers/articles by language using ISO language codes (e.g., 'en' for English, 'es' for "
              "Spanish). Applies to both publishers and articles."
     )
+    parser.add_argument("-q", "--query", type=str, help="Search articles with multiple keywords")
     parser.add_argument("-k", "--keyword", type=str, help="Search articles with a specific keyword in the title.")
     parser.add_argument("-do", "--domain", type=str, help="Search articles in a specific domain.")
     parser.add_argument(
@@ -68,6 +74,11 @@ def main():
         help="Provide the file path where the articles will be appended. "
              "Ensure the file path is accessible and writable."
     )
+    parser.add_argument(
+        "-dir", "--directory",
+        type=str,
+        help="Provide the directory where the articles will be appended."
+    )
 
     args = parser.parse_args()
 
@@ -82,6 +93,10 @@ def main():
     if args.append:
         print("---Appending news to a file---")
         articles_generator.append_articles_to_file(args.file, args)
+
+    if args.generate:
+        print("---Generating articles in a MD file---")
+        articles_generator.generate_files_with_articles(args.directory, args)
 
 
 if __name__ == "__main__":
