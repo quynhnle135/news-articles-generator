@@ -67,13 +67,11 @@ def get_latest_articles(args):
             title = article.get("title", "No Title")
             author = article.get("author", "Unknown Author")
             published_at = article.get("publishedAt", "N/A")
-            description = article.get("description", "No Description")
             url = article.get("url", "No URL")
 
             print(f"{count}. {title}\n"
                   f"Written by: {author}\n"
                   f"Published at: {published_at}\n"
-                  f"Description: {description}\n"
                   f"Read the full article at: {url}\n\n")
         return response
     except requests.RequestException as e:
@@ -93,7 +91,6 @@ def append_articles_to_file(file_path, args):
                 title = article.get("title", "No Title")
                 author = article.get("author", "Unknown Author")
                 published_at = article.get("publishedAt", "N/A")
-                description = article.get("description", "No Description")
                 url = article.get("url", "No URL")
 
                 file.write(
@@ -101,7 +98,6 @@ def append_articles_to_file(file_path, args):
                       f"{count}. {title}\n"
                       f"Written by: {author}\n"
                       f"Published at: {published_at}\n"
-                      f"Description: {description}\n"
                       f"Read the full article at: {url}\n\n"
                 )
     except IOError as e:
