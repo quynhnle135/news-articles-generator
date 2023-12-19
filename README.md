@@ -71,6 +71,8 @@ options:
 
 ```
 
+---
+
 ## Examples of News Articles Generator features:
 - Retrieve top publishers in the category <i>business</i>: ```python3 main.py -p --category business```
 - Result:
