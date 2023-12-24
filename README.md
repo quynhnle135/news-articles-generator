@@ -1,7 +1,7 @@
 # News Articles Generator
 
 ## Overview
-The News Articles Generator is a command-line interface (CLI) utility designed for fetching,, processing, and organizing news articles from various publishers. Utilizing the News API, it offers functionalities such as retrieving publishers, fetching the latest nes articles, appending articles fo a file, and generating markdown files with a curated list of articles.
+The News Articles Generator is a command-line interface (CLI) utility designed for fetching, processing, and organizing news articles from various publishers. Utilizing the News API, it offers functionalities such as retrieving publishers, fetching the latest nes articles, appending articles fo a file, and generating markdown files with a curated list of articles.
 
 ## Features
 #### 1. Retrieve Top News Publishers ("-p" or "--publishers"):
