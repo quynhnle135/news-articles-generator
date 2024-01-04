@@ -1,9 +1,38 @@
 import requests
 from api_key import header
 from datetime import date
+from typing import Optional, Dict, Any
 
 
-def get_publishers(args):
+class Args:
+    # Existing attributes
+    category: Optional[str]
+    language: Optional[str]
+    country: Optional[str]
+
+    # Additional attributes for get_latest_articles
+    query: Optional[str]
+    keyword: Optional[str]
+    sortby: Optional[str]
+    domain: Optional[str]
+    fromdate: Optional[str]
+    todate: Optional[str]
+
+    def __init__(self, category: Optional[str] = None, language: Optional[str] = None, country: Optional[str] = None,
+                 query: Optional[str] = None, keyword: Optional[str] = None, sortby: Optional[str] = None,
+                 domain: Optional[str] = None, fromdate: Optional[str] = None, todate: Optional[str] = None):
+        self.category = category
+        self.language = language
+        self.country = country
+        self.query = query
+        self.keyword = keyword
+        self.sortby = sortby
+        self.domain = domain
+        self.fromdate = fromdate
+        self.todate = todate
+
+
+def get_publishers(args: Args) -> Optional[Dict[str, Any]]:
     base_url = "https://newsapi.org/v2/top-headlines/sources"
     params = {}
 
@@ -30,7 +59,7 @@ def get_publishers(args):
         print(f"An error occurred: {e}")
 
 
-def get_latest_articles(args):
+def get_latest_articles(args: Args) -> Optional[Dict[str, Any]]:
     base_url = "https://newsapi.org/v2/everything"
     params = {
         "qInTitle": "technology",  # Default query
@@ -78,7 +107,7 @@ def get_latest_articles(args):
         print(f"An error occurred: {e}")
 
 
-def append_articles_to_file(file_path, args):
+def append_articles_to_file(file_path: str, args: Args) -> None:
     response = get_latest_articles(args)
     articles = response["articles"][:10]
     if not articles:
@@ -104,7 +133,7 @@ def append_articles_to_file(file_path, args):
         print(f"An error occurred while opening the file: {e}")
 
 
-def generate_files_with_articles(directory, args):
+def generate_files_with_articles(directory: str, args: Args) -> None:
     today = date.today()
     file_name = f"{today.strftime('%Y%m%d')}.md"
     file_path = f"{directory}/{file_name}"
